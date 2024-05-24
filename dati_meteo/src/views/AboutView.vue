@@ -1,5 +1,187 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <div class="page-wrapper">
+    <div class="container">
+      <!-- Cambia il colore di sfondo del titolo -->
+      <h1 style="background-color: #ffd700;">TEMPERATURE</h1>
+
+      <h1 align="center">Dati</h1>
+
+      <!-- Tabella dei dati -->
+      <table v-if="jsonData.length">
+        <thead>
+          <tr>
+            <th v-for="key in headers" :key="key" :class="{ 'text-left': key === 'Anno' || key === 'Comune', 'text-right': key !== 'Anno' && key !== 'Comune' }">{{ key }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(row, index) in jsonData" :key="index">
+            <td v-for="key in headers" :key="key" :class="{ 'text-left': key === 'Anno' || key === 'Comune', 'text-right': key !== 'Anno' && key !== 'Comune' }" @click="handleCellClick(row[key], key)">
+              <button v-if="key === 'Comune'">{{ row[key] }}</button>
+              <span v-else>{{ row[key] }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Inserimento del grafico -->
+      <div>
+        <apexchart width="400" type="line" height="350" :options="chartOptions" :series="series"></apexchart>
+      </div>
+
+      <!-- Aggiungi un commento extra -->
+      <!-- Questa è una modifica aggiunta per differenziare il codice -->
+
+      <!-- Aggiungi un'icona -->
+      <img src="/path/to/icon.png" alt="Icona" style="width: 50px; height: 50px;">
+
+    </div>
   </div>
 </template>
+
+<script>
+import * as XLSX from 'xlsx';
+import VueApexCharts from 'vue3-apexcharts';
+
+export default {
+  name: 'HomeView',
+  components: {
+    apexchart: VueApexCharts
+  },
+  data() {
+    return {
+      jsonData: [],
+      headers: [],
+      chartOptions: {
+        chart: {
+          id: 'temperature-chart'
+        },
+        xaxis: {
+          categories: []
+        },
+        yaxis: {
+          title: {
+            text: 'Media Temperatura Annuo'
+          }
+        },
+        legend: {
+          position: 'bottom',
+          formatter: (seriesName, opts) => {
+            return this.series[opts.seriesIndex]?.name || seriesName;
+          }
+        },
+        tooltip: {
+          // Modifica il testo del tooltip
+          shared: true,
+          intersect: false,
+          y: {
+            formatter: function (val) {
+              return val + " °C";
+            }
+          }
+        }
+      },
+      series: [],
+      selectedCell: null
+    };
+  },
+  mounted() {
+    this.loadExcelFile();
+  },
+  methods: {
+    async loadExcelFile() {
+      try {
+        const response = await fetch(new URL('@/assets/precipitazioni.xlsx', import.meta.url));
+        const arrayBuffer = await response.arrayBuffer();
+        const data = new Uint8Array(arrayBuffer);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        let json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+        // Set the headers
+        this.headers = json[0];
+        console.log("Headers:", this.headers); // Log for debugging
+        json.shift(); // Remove the header row from data
+
+        // Convert to object array
+        this.jsonData = json.map(row => {
+          let obj = {};
+          this.headers.forEach((header, index) => {
+            obj[header] = row[index];
+          });
+          return obj;
+        });
+        console.log("Json Data:", this.jsonData); // Log for debugging
+
+        // Set x-axis categories for the chart
+        this.chartOptions.xaxis.categories = this.jsonData.map(row => row['Comune']);
+
+        // Generate series data for the chart
+        this.series = this.jsonData.map(row => ({
+          name: row[this.headers[0]], // Ensure that 'Comune' is used as the name of the series
+          data: this.headers.slice(2).map(year => row[year])
+        }));
+        console.log("Series Data:", this.series); // Log for debugging
+
+      } catch (error) {
+        console.error('Errore durante il caricamento del file Excel:', error);
+      }
+    },
+
+    handleCellClick(value, key) {
+      this.selectedCell = `${key}: ${value}`;
+    },
+
+    closeCard() {
+      this.selectedCell = null;
+    }
+  }
+};
+</script>
+
+<style scoped>
+/* Stile alternato delle righe */
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Cambia il colore del testo nelle celle */
+td, th {
+  color: #333;
+}
+
+/* Modifica il colore di sfondo delle celle */
+td {
+  background-color: #fff;
+}
+
+/* Aggiungi bordi personalizzati */
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+/* Stile del testo nell'intestazione della tabella */
+th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Stile delle celle di testo a sinistra */
+.text-left {
+  text-align: left;
+}
+
+/* Stile delle celle di testo a destra */
+.text-right {
+  text-align: right;
+}
+
+/* Aggiungi un'icona o simbolo */
+.icon {
+  font-size: 20px;
+  margin-right: 5px;
+}
+</style>
+

@@ -1,34 +1,31 @@
 <template>
-  <div class="container">
-    <h1>PRECIPITAZIONI</h1>
+  <div class="page-wrapper">
+    <div class="container">
+      <h1>TEMPERATURE</h1>
 
-    <!-- Inserimento del grafico -->
-    <div>
-      <apexchart type="line" height="350" :options="chartOptions" :series="series"></apexchart>
-    </div>
+      <h1 aglin="center">Dati</h1>
 
-    <!-- Tabella dei dati -->
-    <table v-if="jsonData.length">
-      <thead>
-        <tr>
-          <th v-for="key in headers" :key="key" :class="{ 'text-left': key === 'Anno' || key === 'Città', 'text-right': key !== 'Anno' && key !== 'Città' }">{{ key }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(row, index) in jsonData" :key="index">
-          <td v-for="(value, key) in row" :key="key" :class="{ 'text-left': key === 'Anno' || key === 'Città', 'text-right': key !== 'Anno' && key !== 'Città' }" @click="handleCellClick(value, key)">
-            <button v-if="key === 'Città'">{{ value }}</button>
-            <span v-else>{{ value }}</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+      <!-- Tabella dei dati -->
+      <table v-if="jsonData.length">
+        <thead>
+          <tr>
+            <th v-for="key in headers" :key="key" :class="{ 'text-left': key === 'Anno' || key === 'Comune', 'text-right': key !== 'Anno' && key !== 'Comune' }">{{ key }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(row, index) in jsonData" :key="index">
+            <td v-for="key in headers" :key="key" :class="{ 'text-left': key === 'Anno' || key === 'Comune', 'text-right': key !== 'Anno' && key !== 'Comune' }" @click="handleCellClick(row[key], key)">
+              <button v-if="key === 'Comune'">{{ row[key] }}</button>
+              <span v-else>{{ row[key] }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-    <!-- Card delle informazioni del comune -->
-    <div class="card" v-if="selectedCity">
-      <h2>{{ selectedCity }}</h2>
-      <!-- Altre informazioni del comune qui... -->
-      <button @click="closeCard">Chiudi</button>
+      <!-- Inserimento del grafico -->
+      <div>
+        <apexchart type="line" height="350" :options="chartOptions" :series="series"></apexchart>
+      </div>
     </div>
   </div>
 </template>
@@ -48,19 +45,29 @@ export default {
       headers: [],
       chartOptions: {
         chart: {
-          id: 'precipitazioni-chart'
+          id: 'temperature-chart'
         },
         xaxis: {
           categories: []
         },
         yaxis: {
           title: {
-            text: 'Media Precipitazioni Annuo'
+            text: 'Media Temperatura Annuo'
           }
+        },
+        legend: {
+          position: 'bottom',
+          formatter: (seriesName, opts) => {
+            return this.series[opts.seriesIndex]?.name || seriesName;
+          }
+        },
+        tooltip: {
+          shared: true,
+          intersect: false
         }
       },
       series: [],
-      selectedCity: null
+      selectedCell: null
     };
   },
   mounted() {
@@ -79,6 +86,7 @@ export default {
 
         // Set the headers
         this.headers = json[0];
+        console.log("Headers:", this.headers); // Log for debugging
         json.shift(); // Remove the header row from data
 
         // Convert to object array
@@ -89,67 +97,57 @@ export default {
           });
           return obj;
         });
+        console.log("Json Data:", this.jsonData); // Log for debugging
 
         // Set x-axis categories for the chart
-        this.chartOptions.xaxis.categories = this.headers.slice(2); // Assuming first two headers are 'Anno' and 'Città'
+        this.chartOptions.xaxis.categories = this.jsonData.map(row => row['Comune']);
 
         // Generate series data for the chart
         this.series = this.jsonData.map(row => ({
-          name: row.Città,
+          name: row[this.headers[0]], // Ensure that 'Comune' is used as the name of the series
           data: this.headers.slice(2).map(year => row[year])
         }));
+        console.log("Series Data:", this.series); // Log for debugging
 
       } catch (error) {
         console.error('Errore durante il caricamento del file Excel:', error);
       }
     },
+
     handleCellClick(value, key) {
-      if (key === 'Città') {
-        this.openCard(value);
-      }
+      this.selectedCell = `${key}: ${value}`;
     },
-    openCard(city) {
-      this.selectedCity = city;
-      alert('Hai cliccato su: ' + city);
-    },
+
     closeCard() {
-      this.selectedCity = null;
+      this.selectedCell = null;
     }
   }
 };
 </script>
 
 <style scoped>
-.container {
-  margin: 0 5%;
-}
+
 table {
   width: 100%;
   border-collapse: collapse;
 }
+
 th, td {
   border: 1px solid;
   padding: 8px;
 }
+
 th {
   background-color: #f2f2f2;
   font-weight: bold;
 }
+
 .text-left {
   text-align: left;
 }
+
 .text-right {
   text-align: right;
 }
-.card {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #ffffff;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+
 </style>

@@ -1,7 +1,8 @@
 <template>
   <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link to="/">temperature</router-link> |
+    <router-link to="/about">precipitazioni</router-link> | 
+    <router-link to="/città">città</router-link>
   </nav>
   <router-view/>
 </template>
