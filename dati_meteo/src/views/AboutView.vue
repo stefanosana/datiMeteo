@@ -1,10 +1,9 @@
 <template>
   <div class="page-wrapper">
     <div class="container">
-      <!-- Cambia il colore di sfondo del titolo -->
-      <h1 style="background-color: #ffd700;">TEMPERATURE</h1>
+      <h1>PRECIPITAZIONI</h1>
 
-      <h1 align="center">Dati</h1>
+      <h1 aglin="center">Dati</h1>
 
       <!-- Tabella dei dati -->
       <table v-if="jsonData.length">
@@ -25,15 +24,8 @@
 
       <!-- Inserimento del grafico -->
       <div>
-        <apexchart width="400" type="line" height="350" :options="chartOptions" :series="series"></apexchart>
+        <apexchart type="line" height="350" :options="chartOptions" :series="series"></apexchart>
       </div>
-
-      <!-- Aggiungi un commento extra -->
-      <!-- Questa è una modifica aggiunta per differenziare il codice -->
-
-      <!-- Aggiungi un'icona -->
-      <img src="/path/to/icon.png" alt="Icona" style="width: 50px; height: 50px;">
-
     </div>
   </div>
 </template>
@@ -70,14 +62,8 @@ export default {
           }
         },
         tooltip: {
-          // Modifica il testo del tooltip
           shared: true,
-          intersect: false,
-          y: {
-            formatter: function (val) {
-              return val + " °C";
-            }
-          }
+          intersect: false
         }
       },
       series: [],
@@ -140,48 +126,28 @@ export default {
 </script>
 
 <style scoped>
-/* Stile alternato delle righe */
-tr:nth-child(even) {
-  background-color: #f2f2f2;
+
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-/* Cambia il colore del testo nelle celle */
-td, th {
-  color: #333;
-}
-
-/* Modifica il colore di sfondo delle celle */
-td {
-  background-color: #fff;
-}
-
-/* Aggiungi bordi personalizzati */
 th, td {
-  border: 1px solid #ddd;
+  border: 1px solid;
   padding: 8px;
 }
 
-/* Stile del testo nell'intestazione della tabella */
 th {
   background-color: #f2f2f2;
   font-weight: bold;
-  text-align: center;
 }
 
-/* Stile delle celle di testo a sinistra */
 .text-left {
   text-align: left;
 }
 
-/* Stile delle celle di testo a destra */
 .text-right {
   text-align: right;
 }
 
-/* Aggiungi un'icona o simbolo */
-.icon {
-  font-size: 20px;
-  margin-right: 5px;
-}
 </style>
-
