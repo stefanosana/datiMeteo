@@ -1,8 +1,8 @@
 <template>
   <nav>
-    <router-link to="/">temperature</router-link> |
-    <router-link to="/about">precipitazioni</router-link> | 
-    <router-link to="/città">città</router-link>
+    <router-link to="/">Temperature</router-link> |
+    <router-link to="/about">Precipitazioni</router-link> | 
+    <router-link to="/città">Città</router-link>
   </nav>
   <router-view/>
 </template>

@@ -2,8 +2,6 @@
     <div class="page-wrapper">
       <div class="container">
         <h1>TEMPERATURE</h1>
-  
-        
         <br>
   
         <h1 align="center">Tabella</h1>
@@ -12,8 +10,9 @@
           <label for="filterHottest">Mostra solo le 10 città più calde</label>
         </div>
         
-        <!-- Tabella dei dati -->
-        <table v-if="jsonData.length">
+        <!--tabella-->
+        <div class="table-container">
+          <table v-if="jsonData.length">
           <thead>
             <tr>
               <th v-for="key in headers" :key="key" :class="{ 'text-left': key === 'Comune', 'text-right': key !== 'Comune' }">{{ key }}</th>
@@ -28,8 +27,9 @@
             </tr>
           </tbody>
         </table>
-        
-        <!-- Inserimento del grafico -->
+        </div>
+
+        <!--grafico-->
         <div>
           <apexchart type="bar" height="350" :options="chartOptions" :series="chartSeries"></apexchart>
         </div>
@@ -163,6 +163,17 @@ table {
 th, td {
   border: 1px solid;
   padding: 8px;
+}
+
+.table-container {
+  width: 90%;
+  overflow-x: auto;
+  margin-bottom: 2rem;
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-left: 50px;
 }
 
 th {

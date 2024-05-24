@@ -6,7 +6,8 @@
       <h1 aglin="center">Dati</h1>
 
       <!-- Tabella dei dati -->
-      <table v-if="jsonData.length">
+      <div class="table-container">
+        <table v-if="jsonData.length">
         <thead>
           <tr>
             <th v-for="key in headers" :key="key" :class="{ 'text-left': key === 'Anno' || key === 'Comune', 'text-right': key !== 'Anno' && key !== 'Comune' }">{{ key }}</th>
@@ -21,7 +22,8 @@
           </tr>
         </tbody>
       </table>
-
+      </div>
+      
       <!-- Inserimento del grafico -->
       <div>
         <apexchart type="line" height="350" :options="chartOptions" :series="series"></apexchart>
@@ -148,6 +150,17 @@ th {
 
 .text-right {
   text-align: right;
+}
+
+.table-container {
+  width: 90%;
+  overflow-x: auto;
+  margin-bottom: 2rem;
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-left: 50px;
 }
 
 </style>
