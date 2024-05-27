@@ -1,14 +1,11 @@
 <template>
     <div class="page-wrapper">
       <div class="container">
-        <h1>TEMPERATURE</h1>
+        <br> <br>
         <br>
-  
-        <h1 align="center">Tabella</h1>
-        <div style="text-align: right;">
-          <input type="checkbox" style="margin-bottom: 20px;" v-model="filterHottest" @change="filterData">
-          <label for="filterHottest">Mostra solo le 10 città più calde</label>
-        </div>
+
+        <h1 style="text-transform: uppercase">Tabella Dati Temperature</h1>
+        
         
         <!--tabella-->
         <div class="table-container">
@@ -27,6 +24,13 @@
             </tr>
           </tbody>
         </table>
+        </div>
+
+        <h1 style="text-transform: uppercase">Grafico Temperature</h1>
+
+        <div style="text-align: right;">       
+          <input type="checkbox" style="margin-bottom: 20px;" v-model="filterHottest" @change="filterData"> 
+          <label for="filterHottest">Mostra solo le 10 città più calde</label>
         </div>
 
         <!--grafico-->
@@ -183,6 +187,10 @@ th {
 
 .text-left {
   text-align: left;
+}
+
+label {
+  font-family:Arial, Helvetica, sans-serif;
 }
 
 .text-right {

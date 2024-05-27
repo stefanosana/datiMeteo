@@ -1,9 +1,10 @@
 <template>
   <div class="page-wrapper">
     <div class="container">
-      <h1>TEMPERATURE</h1>
 
-      <h1 aglin="center">Dati</h1>
+      <br> <br> 
+
+      <h1 style="text-transform: uppercase">Tabella Dati Temperature</h1>
 
       <!-- Tabella dei dati -->
       <div class="table-container">
@@ -24,7 +25,7 @@
       </table>
       </div>
       
-
+      <h1 style="text-transform: uppercase">Grafico Temperature</h1>
       <!-- Inserimento del grafico -->
       <div>
         <apexchart type="line" height="350" :options="chartOptions" :series="series"></apexchart>

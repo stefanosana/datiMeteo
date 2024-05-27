@@ -20,10 +20,24 @@ nav {
   padding: 30px;
 }
 
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #00434f;
+  padding: 10px;
+  z-index: 999;
+  
+}
+
 nav a {
   font-weight: bold;
-  color: #2c3e50;
+  color: #ffffff;
+  font-size: large;
 }
+  
+
 
 nav a.router-link-exact-active {
   color: #42b983;
