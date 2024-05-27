@@ -191,6 +191,7 @@ th {
 
 label {
   font-family:Arial, Helvetica, sans-serif;
+  font-size: 16px;
 }
 
 .text-right {

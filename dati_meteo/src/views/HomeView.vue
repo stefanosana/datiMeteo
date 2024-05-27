@@ -25,7 +25,8 @@
       </table>
       </div>
       
-      <h1 style="text-transform: uppercase">Grafico Temperature</h1>
+      
+      <h1 style="text-transform: uppercase">Grafico Temperature</h1> 
       <!-- Inserimento del grafico -->
       <div>
         <apexchart type="line" height="350" :options="chartOptions" :series="series"></apexchart>
